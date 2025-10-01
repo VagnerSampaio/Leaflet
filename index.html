@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>Leaflet Map Example</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Leaflet CSS -->
+    <!------------------------------
+    ---------Leaflet CSS------------ 
+    ------------------------------->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         #map {
@@ -16,25 +18,297 @@
             padding: 0;
             height: 100%;
         }
+        .coordinates {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            border-radius: 3px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
-    <div id="map"></div>
-    <!-- Leaflet JS -->
+    <div id="map">
+        <div class="leaflet-control coordinates"></div>
+    </div>
+    <!------------------------------
+    -----------Leaflet JS----------- 
+    ------------------------------->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="./data/chacaraParaisoGeoJSON.js"></script>
     <script>
-        // Initialize the map and set its view to a chosen geographical coordinates and zoom level
-        var map = L.map('map').setView([-5.1113411,-42.8284244], 15);
 
-        // Add a tile layer to add to our map, in this case it's a OSM tile layer.
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        /*--------------------------
+        ----------MAP INIT----------
+        --------------------------*/
+
+        // Initialize the map and set its view to a chosen geographical coordinates and zoom level
+        var map = L.map('map').setView([-4.9325678,-43.1225085], 11);
+
+
+
+
+
+        /*--------------------------
+        --------TILE LAYERS---------
+        --------------------------*/
+
+        // Open Street Map Tile Layer
+        var openStreetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
+        })
+        //osm.addTo(map);
+
+        //Alidade Satellite
+        var alidadeSatellite = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}', {
+	        minZoom: 0,
+	        maxZoom: 20,
+	        attribution: '&copy; CNES, Distribution Airbus DS, © Airbus DS, © PlanetObserver (Contains Copernicus Data) | &copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	        ext: 'jpg'
+        });
+        //AlidadeSatellite.addTo(map);
+        
+        //Open Topo Map
+        var openTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+	        maxZoom: 17,
+	        attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+        });
+        //OpenTopoMap.addTo(map);
+
+        //Google Streets
+        var googleStreets = L.tileLayer('http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}',{
+            maxZoom: 20,
+            subdomains:['mt0','mt1','mt2','mt3']
+        });
+        //googleStreets.addTo(map);
+
+        //Google Hybrid
+        var googleHybrid = L.tileLayer('http://{s}.google.com/vt?lyrs=s,h&x={x}&y={y}&z={z}',{
+            maxZoom: 20,
+            subdomains:['mt0','mt1','mt2','mt3']
+        });
+        //googleHybrid.addTo(map);
+
+        var googleSat = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}',{
+            maxZoom: 20,
+            subdomains:['mt0','mt1','mt2','mt3']
+        });
+        //googleSat.addTo(map);
+
+        googleTerrain = L.tileLayer('http://{s}.google.com/vt?lyrs=p&x={x}&y={y}&z={z}',{
+            maxZoom: 20,
+            subdomains:['mt0','mt1','mt2','mt3']
+        });
+        //googleTerrain.addTo(map);
+
+
+
+
+
+        /*--------------------------
+        ----------MARKERS-----------
+        --------------------------*/
+
+        // Chácara Paraíso Marker
+        var chacaraParaisoMarker = L.marker([-4.932527184331164, -43.1200854117501]).addTo(map)
+            .bindPopup('Chácara Paraíso JVS')
+            .openPopup();
+
+        // Ponte Estaiada Marker
+        var ponteEstaiadaMarker = L.marker([-5.0696655,-42.8043797]).addTo(map)
+            .bindPopup('Ponte Estaiada')
+            .openPopup();   
+
+        /* Chácara Paraíso Marker
+        var ChacaraParaisoMarker = L.marker([-4.932527184331164, -43.1200854117501]);
+        var ChacaraParaisoPopup = ChacaraParaisoMarker.bindPopup('Chácara Paraíso').openPopup();
+        ChacaraParaisoPopup.addTo(map); */
+        
+
+
+
+        
+        /*--------------------------
+        ----------GEOJSON-----------
+        --------------------------*/
+
+        // GeoJSON Features
+        var geojsonFeatures = [{
+            "type": "Feature",
+            "properties": {
+                "name": "Chácara Primavera",
+                "amenity": "Chácara",
+                "popupContent": "Chácara Coqueiro"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -43.0525,
+                    -4.995
+                ]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {
+                "name": "Chácara Primavera",
+                "amenity": "Chácara",
+                "popupContent": "Chácara Primavera"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -43.025,
+                    -4.995
+                ]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {
+                "name": "Chácara Recanto Feliz",
+                "amenity": "Chácara",
+                "popupContent": "Chácara Recanto Feliz"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -43.05,
+                    -4.98
+                ]
+            }
+        }];
+        // Add GeoJSON Features to the map
+        var OutrasChacaras = L.geoJSON(geojsonFeatures, {
+            onEachFeature: function (feature, layer) {
+                if (feature.properties && feature.properties.popupContent) {
+                    layer.bindPopup(feature.properties.popupContent);
+                }
+            }
         }).addTo(map);
 
-        // Add a marker with a popup
-        L.marker([-5.1113411,-42.8284244]).addTo(map)
-            .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-            .openPopup();
+        //GeoJSON Polygon (defined inline)
+            var geojsonPolygon = {
+                "type": "Feature",
+                "properties": {
+                    "name": "Sample Polygon",
+                    "area": 15
+                },
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [[
+                        [-43.1, -4.9],
+                        [-43.0, -4.9],
+                        [-43.0, -5.0],
+                        [-43.1, -5.0],
+                        [-43.1, -4.9]
+                    ]]
+                }
+            };
+            var poligono = L.geoJSON(geojsonPolygon, {
+                onEachFeature: function(feature,layer) {
+                    layer.bindPopup('Polygon Area: ' + feature.properties.area + ' km²');
+                },
+                style:{
+                    color: 'blue', 
+                    weight: 2, 
+                    fillColor: 'lightblue',
+                    fillOpacity: 0.5}
+                }
+            ).addTo(map);
+        
+        // GeoJSON Data (from external file)
+        var chacaraParaisoData = L.geoJSON(chacaraParaisoGeoJSON, {
+            onEachFeature: function(feature,layer) {
+                //layer.bindPopup('Chácara Paraíso - Área: 25.000 m²');
+                layer.bindPopup('<b>Name: </b>' + feature.properties.name + '<br><b>Área: </b>' + feature.properties.hectares + ' hectares'    );
+            },
+            style:{
+                color: 'green', 
+                weight: 2, 
+                fillColor: 'lightgreen',
+                fillOpacity: 0.5}
+            }
+        ).addTo(map);
+
+
+
+
+        /*--------------------------
+        -------LAYER CONTROL--------
+        --------------------------*/
+        var baseMaps = {
+            "Alidade Satellite": alidadeSatellite,
+            "Google Streets": googleStreets,
+            "Google Hybrid": googleHybrid,
+            "Google Satellite": googleSat,
+            "Google Terrain": googleTerrain,
+            "Open Street Map": openStreetMap,
+            "Open Topo Map": openTopoMap
+        };
+
+        var overlayMaps = {
+            "Chácara Paraíso": chacaraParaisoMarker,
+            "Chácara Paraíso GeoJSON": chacaraParaisoData,
+            "Outras Chácaras": OutrasChacaras,
+            "Polígono Exemplo": poligono,
+            "Ponte Estaiada": ponteEstaiadaMarker
+        };
+
+        baseMaps["Google Streets"].addTo(map);
+        L.control.layers(baseMaps, overlayMaps,{collapsed:false}).addTo(map);
+
+        
+        /*--------------------------
+        -------MAP EVENTS----------
+        --------------------------*/
+        map.on('mousemove', function(e) {
+            document.querySelector('.coordinates').innerHTML = "Lat: " + e.latlng.lat.toFixed(5) + ", Lng: " + e.latlng.lng.toFixed(5);
+            console.log("Mouse moved to: " + e.latlng.toString());
+        });
+        /*
+        map.on('click', function(e) {
+            alert("You clicked the map at " + e.latlng.toString());
+        });
+        */
+        map.on('zoomend', function() {
+            console.log("Zoom level changed to: " + map.getZoom());
+        });
+        map.on('moveend', function() {
+            console.log("Map center moved to: " + map.getCenter().toString());
+        });
+        map.on('layeradd', function(e) {
+            console.log("Layer added: " + e.layer);
+        });
+        map.on('layerremove', function(e) {
+            console.log("Layer removed: " + e.layer);
+        });
+        map.on('popupopen', function(e) {
+            console.log("Popup opened: " + e.popup.getContent());
+        });
+        map.on('popupclose', function(e) {
+            console.log("Popup closed: " + e.popup.getContent());
+        });
+        map.on('baselayerchange', function(e) {
+            console.log("Base layer changed to: " + e.name);
+        });
+        map.on('overlayadd', function(e) {
+            console.log("Overlay added: " + e.name);
+        });
+        map.on('overlayremove', function(e) {
+            console.log("Overlay removed: " + e.name);
+        });
+        map.on('contextmenu', function(e) {
+            alert("Right-click at " + e.latlng.toString());
+        });
+
+        
+        /*--------------------------
+        -------END OF SCRIPT--------
+        --------------------------*/
+
     </script>
 </body>
-</html>
+</html> 
