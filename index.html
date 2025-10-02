@@ -180,7 +180,7 @@
             }
         }];
         // Add GeoJSON Features to the map
-        var OutrasChacaras = L.geoJSON(geojsonFeatures, {
+        var outrasChacaras = L.geoJSON(geojsonFeatures, {
             onEachFeature: function (feature, layer) {
                 if (feature.properties && feature.properties.popupContent) {
                     layer.bindPopup(feature.properties.popupContent);
@@ -254,7 +254,7 @@
         var overlayMaps = {
             "Chácara Paraíso": chacaraParaisoMarker,
             "Chácara Paraíso GeoJSON": chacaraParaisoData,
-            "Outras Chácaras": OutrasChacaras,
+            "Outras Chácaras": outrasChacaras,
             "Polígono Exemplo": poligono,
             "Ponte Estaiada": ponteEstaiadaMarker
         };
