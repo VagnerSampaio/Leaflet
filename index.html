@@ -222,8 +222,8 @@
         var chacaraParaisoData = L.geoJSON(chacaraParaisoGeoJSON, {
             onEachFeature: function(feature,layer) {
                 //layer.bindPopup('Chácara Paraíso - Área: 25.000 m²');
-                layer.bindPopup('<b>Name: </b>' + feature.properties.name + 
-                '<br><b>Área: </b>' + feature.properties.hectares + ' hectares'+
+                layer.bindPopup('<b>Nome: </b>' + feature.properties.name + 
+                //'<br><b>Área: </b>' + feature.properties.hectares + ' hectares'+
                 '<br><b>Telefone: </b>' + feature.properties.whatsapp +
                 '<br><b>Instagram: </b>' + feature.properties.instagram)
             },
