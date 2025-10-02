@@ -120,8 +120,7 @@
 
         // Ponte Estaiada Marker
         var ponteEstaiadaMarker = L.marker([-5.0696655,-42.8043797]).addTo(map)
-            .bindPopup('Ponte Estaiada')
-            .openPopup();   
+            .bindPopup('Ponte Estaiada');   
 
         /* Chácara Paraíso Marker
         var ChacaraParaisoMarker = L.marker([-4.932527184331164, -43.1200854117501]);
@@ -140,7 +139,7 @@
         var geojsonFeatures = [{
             "type": "Feature",
             "properties": {
-                "name": "Chácara Primavera",
+                "name": "Chácara Coqueiro",
                 "amenity": "Chácara",
                 "popupContent": "Chácara Coqueiro"
             },
@@ -223,7 +222,11 @@
         var chacaraParaisoData = L.geoJSON(chacaraParaisoGeoJSON, {
             onEachFeature: function(feature,layer) {
                 //layer.bindPopup('Chácara Paraíso - Área: 25.000 m²');
-                layer.bindPopup('<b>Name: </b>' + feature.properties.name + '<br><b>Área: </b>' + feature.properties.hectares + ' hectares'    );
+                layer.bindPopup('<b>Name: </b>' + feature.properties.name + 
+                '<br><b>Área: </b>' + feature.properties.hectares + ' hectares'+
+                '<br><b>Telefone: </b>' + feature.properties.WhastApp +
+                '<br><b>Instagram: </b>' + feature.properties.Instagram
+            );
             },
             style:{
                 color: 'green', 
